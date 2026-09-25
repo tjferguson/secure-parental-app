@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=ParentChat
+Comment=Secure parental control chat
+Exec=python3 /opt/parentchat/main.py
+Icon=mail-message-new
+Terminal=false
+Categories=Network;Chat;
+X-GNOME-Autostart-enabled=true
+StartupNotify=false

@@ -1,0 +1,868 @@
+/* ==========================================================================
+   ParentChat — AIM-inspired theme with modern polish
+   ========================================================================== */
+
+:root {
+  --aim-yellow: #FFD700;
+  --aim-blue: #0066CC;
+  --aim-dark: #1a1a2e;
+  --aim-light: #f5f5f5;
+  --aim-gray: #e0e0e0;
+  --bubble-parent: #0066CC;
+  --bubble-child: #e0e0e0;
+
+  --sidebar-width: 280px;
+  --header-height: 60px;
+  --input-height: 72px;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.18);
+  --transition: 0.2s ease;
+}
+
+/* ----- Reset & base ----- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  background: var(--aim-light);
+  color: #222;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--aim-blue);
+  text-decoration: none;
+  transition: opacity var(--transition);
+}
+
+a:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   Loading screen
+   ========================================================================== */
+
+.loading-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  gap: 16px;
+  color: #666;
+}
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 4px solid var(--aim-gray);
+  border-top-color: var(--aim-blue);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.spinner-sm {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+  line-height: 1;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-primary {
+  background: var(--aim-blue);
+  color: #fff;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #0055aa;
+}
+
+.btn-secondary {
+  background: var(--aim-gray);
+  color: #333;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #ccc;
+}
+
+.btn-full {
+  width: 100%;
+}
+
+.btn-sm {
+  padding: 6px 14px;
+  font-size: 13px;
+}
+
+.btn-back {
+  background: none;
+  border: none;
+  color: var(--aim-blue);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition);
+}
+
+.btn-back:hover {
+  background: rgba(0, 102, 204, 0.08);
+}
+
+/* ==========================================================================
+   Form elements
+   ========================================================================== */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+}
+
+.form-group input {
+  padding: 10px 14px;
+  font-size: 15px;
+  border: 2px solid var(--aim-gray);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  background: #fff;
+}
+
+.form-group input:focus {
+  border-color: var(--aim-blue);
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.15);
+}
+
+/* ==========================================================================
+   Auth pages (Login / Register)
+   ========================================================================== */
+
+.auth-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+  background: linear-gradient(145deg, var(--aim-dark) 0%, #16213e 100%);
+}
+
+.auth-card {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 40px 36px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: var(--shadow-lg);
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.auth-logo {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--aim-dark);
+  letter-spacing: -0.5px;
+}
+
+.auth-logo::before {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background: var(--aim-yellow);
+  border-radius: 50%;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.auth-subtitle {
+  color: #888;
+  margin-top: 4px;
+  font-size: 15px;
+}
+
+.auth-error {
+  background: #fee;
+  color: #c00;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 16px;
+  font-size: 14px;
+  border: 1px solid #fcc;
+}
+
+.auth-form {
+  margin-bottom: 20px;
+}
+
+.auth-form .btn-full {
+  margin-top: 8px;
+}
+
+.auth-footer {
+  text-align: center;
+  font-size: 14px;
+  color: #888;
+}
+
+/* ==========================================================================
+   Dashboard layout (sidebar + main)
+   ========================================================================== */
+
+.dashboard-layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ----- Sidebar ----- */
+
+.sidebar {
+  width: var(--sidebar-width);
+  background: var(--aim-dark);
+  color: #ccc;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.sidebar-header {
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-logo {
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.3px;
+}
+
+.sidebar-logo::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: var(--aim-yellow);
+  border-radius: 50%;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.sidebar-email {
+  display: block;
+  font-size: 12px;
+  color: #888;
+  margin-top: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 12px;
+}
+
+.sidebar-section-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #666;
+  padding: 4px 8px 8px;
+}
+
+.sidebar-loading {
+  display: flex;
+  justify-content: center;
+  padding: 24px;
+}
+
+.sidebar-error {
+  color: #f88;
+  font-size: 13px;
+  padding: 8px;
+}
+
+.sidebar-empty {
+  padding: 16px 8px;
+  font-size: 14px;
+  color: #777;
+  text-align: center;
+}
+
+.sidebar-empty-hint {
+  font-size: 12px;
+  color: #555;
+  margin-top: 4px;
+}
+
+.sidebar-child-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: #ddd;
+  cursor: pointer;
+  transition: background var(--transition);
+  text-align: left;
+}
+
+.sidebar-child-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.child-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--aim-blue);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.child-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.child-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.child-registered {
+  font-size: 11px;
+  color: #777;
+}
+
+.sidebar-footer {
+  padding: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ----- Dashboard main ----- */
+
+.dashboard-main {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--aim-light);
+}
+
+.dashboard-welcome {
+  text-align: center;
+  padding: 40px;
+  max-width: 600px;
+}
+
+.dashboard-welcome h1 {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--aim-dark);
+  margin-bottom: 8px;
+}
+
+.dashboard-welcome p {
+  color: #666;
+  font-size: 15px;
+}
+
+.dashboard-empty-cta {
+  margin-top: 32px;
+}
+
+.dashboard-empty-cta p {
+  margin-bottom: 16px;
+}
+
+.dashboard-children-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.dashboard-child-tile {
+  background: #fff;
+  border: none;
+  border-radius: var(--radius);
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.dashboard-child-tile:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+.tile-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--aim-blue), #0044aa);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.tile-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--aim-dark);
+}
+
+.tile-date {
+  font-size: 12px;
+  color: #999;
+}
+
+/* ==========================================================================
+   Chat layout
+   ========================================================================== */
+
+.chat-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #fff;
+}
+
+/* ----- Chat header ----- */
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--header-height);
+  padding: 0 16px;
+  border-bottom: 1px solid var(--aim-gray);
+  background: #fff;
+  flex-shrink: 0;
+}
+
+.chat-header-info h2 {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--aim-dark);
+}
+
+/* ----- Chat error ----- */
+
+.chat-error {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fee;
+  color: #c00;
+  padding: 8px 16px;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.chat-error-dismiss {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #c00;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+/* ----- Screenshot preview ----- */
+
+.screenshot-preview {
+  border-bottom: 1px solid var(--aim-gray);
+  background: #fafafa;
+  padding: 12px 16px;
+  flex-shrink: 0;
+}
+
+.screenshot-preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+}
+
+.screenshot-preview-header button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #888;
+}
+
+.screenshot-preview img {
+  max-width: 100%;
+  max-height: 320px;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow);
+}
+
+/* ----- Messages area ----- */
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--aim-light);
+}
+
+.chat-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #999;
+  font-size: 15px;
+}
+
+/* ----- Message bubbles ----- */
+
+.message-row {
+  display: flex;
+  max-width: 70%;
+}
+
+.bubble-right {
+  align-self: flex-end;
+  justify-content: flex-end;
+}
+
+.bubble-left {
+  align-self: flex-start;
+  justify-content: flex-start;
+}
+
+.message-bubble {
+  padding: 10px 14px;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  max-width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.message-bubble.bubble-parent {
+  background: var(--bubble-parent);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+
+.message-bubble.bubble-child {
+  background: var(--bubble-child);
+  color: #222;
+  border-bottom-left-radius: 4px;
+}
+
+.bubble-sender {
+  font-size: 11px;
+  font-weight: 700;
+  opacity: 0.7;
+  margin-bottom: 2px;
+}
+
+.bubble-content {
+  font-size: 15px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+}
+
+.bubble-time {
+  font-size: 10px;
+  opacity: 0.55;
+  margin-top: 4px;
+  text-align: right;
+}
+
+/* ----- Input area ----- */
+
+.chat-input-area {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--aim-gray);
+  background: #fff;
+  flex-shrink: 0;
+}
+
+.chat-input {
+  flex: 1;
+  padding: 10px 14px;
+  font-size: 15px;
+  border: 2px solid var(--aim-gray);
+  border-radius: 20px;
+  outline: none;
+  resize: none;
+  max-height: 120px;
+  font-family: inherit;
+  line-height: 1.4;
+  transition: border-color var(--transition);
+}
+
+.chat-input:focus {
+  border-color: var(--aim-blue);
+}
+
+.btn-send {
+  border-radius: 20px;
+  padding: 10px 22px;
+  font-size: 15px;
+  min-height: 42px;
+}
+
+/* ==========================================================================
+   Modal
+   ========================================================================== */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 24px;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-card {
+  background: #fff;
+  border-radius: var(--radius);
+  width: 100%;
+  max-width: 440px;
+  box-shadow: var(--shadow-lg);
+  animation: slideUp 0.25s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(16px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 0;
+}
+
+.modal-header h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--aim-dark);
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #999;
+  cursor: pointer;
+  padding: 0 4px;
+  transition: color var(--transition);
+}
+
+.modal-close:hover {
+  color: #333;
+}
+
+.modal-error {
+  background: #fee;
+  color: #c00;
+  padding: 8px 14px;
+  margin: 12px 24px 0;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  border: 1px solid #fcc;
+}
+
+.modal-body {
+  padding: 20px 24px 24px;
+}
+
+.modal-description {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+/* ----- Registration code display ----- */
+
+.code-display {
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-align: center;
+  padding: 24px 16px;
+  background: #f8f8f8;
+  border: 2px dashed var(--aim-gray);
+  border-radius: var(--radius);
+  color: var(--aim-dark);
+  user-select: all;
+  margin-bottom: 8px;
+}
+
+.code-expiry {
+  font-size: 12px;
+  color: #999;
+  text-align: center;
+}
+
+/* ==========================================================================
+   Responsive — stack sidebar on mobile
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .dashboard-layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    max-height: 50vh;
+  }
+
+  .dashboard-main {
+    min-height: 50vh;
+  }
+
+  .message-row {
+    max-width: 85%;
+  }
+
+  .auth-card {
+    padding: 28px 20px;
+  }
+
+  .dashboard-children-grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  }
+}
