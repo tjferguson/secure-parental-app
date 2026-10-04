@@ -1,5 +1,5 @@
 ############################
-# DNS Record for CloudFront
+# DNS Records for ALB
 ############################
 
 resource "aws_route53_record" "web" {
@@ -8,9 +8,9 @@ resource "aws_route53_record" "web" {
   type    = "A"
 
   alias {
-    name                   = aws_cloudfront_distribution.web.domain_name
-    zone_id                = aws_cloudfront_distribution.web.hosted_zone_id
-    evaluate_target_health = false
+    name                   = aws_lb.main.dns_name
+    zone_id                = aws_lb.main.zone_id
+    evaluate_target_health = true
   }
 }
 
@@ -20,8 +20,8 @@ resource "aws_route53_record" "web_ipv6" {
   type    = "AAAA"
 
   alias {
-    name                   = aws_cloudfront_distribution.web.domain_name
-    zone_id                = aws_cloudfront_distribution.web.hosted_zone_id
-    evaluate_target_health = false
+    name                   = aws_lb.main.dns_name
+    zone_id                = aws_lb.main.zone_id
+    evaluate_target_health = true
   }
 }

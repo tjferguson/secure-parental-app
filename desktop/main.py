@@ -74,6 +74,7 @@ def _start_app(config, allow_quit=False):
     on_quit = None
     if allow_quit:
         def on_quit():
+            chat_window.stop_subtitles()
             if polling_service is not None:
                 polling_service.stop()
             Gtk.main_quit()

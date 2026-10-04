@@ -432,6 +432,74 @@ def handle_get_screenshot(event, request_id):
 
 
 # ---------------------------------------------------------------------------
+# Subtitle / transcription
+# ---------------------------------------------------------------------------
+
+# Lazy-loaded transcription model (stays in memory across requests)
+_transcription_model = None
+
+
+def _get_transcription_model():
+    """Return a faster-whisper model, loading it on first call."""
+    global _transcription_model
+    if _transcription_model is not None:
+        return _transcription_model
+
+    try:
+        from faster_whisper import WhisperModel
+    except ImportError:
+        raise RuntimeError(
+            "faster-whisper is not installed on the server. "
+            "Install with: pip install faster-whisper"
+        )
+
+    model_size = os.environ.get("SUBTITLE_MODEL", "base")
+    print(f"[transcribe] Loading whisper model '{model_size}'…")
+    _transcription_model = WhisperModel(model_size, device="cpu", compute_type="int8")
+    print("[transcribe] Model ready.")
+    return _transcription_model
+
+
+def handle_transcribe(event):
+    """POST /api/subtitles/transcribe
+
+    Accepts a base64-encoded WAV audio chunk and returns the transcribed text.
+    Authenticated by child token (the child initiates this on their own device).
+
+    Request body: {"audioData": "<base64 WAV>"}
+    Response:     {"text": "transcribed words"}
+    """
+    sender_id, sender_type = get_sender_identity(event)
+    if not sender_id:
+        return build_response(401, {"error": "Unauthorized"})
+
+    body = json.loads(event.get("body") or "{}")
+    audio_b64 = body.get("audioData")
+    if not audio_b64:
+        return build_response(400, {"error": "audioData is required"})
+
+    import base64
+    audio_bytes = base64.b64decode(audio_b64)
+
+    try:
+        import io
+        model = _get_transcription_model()
+        wav_buf = io.BytesIO(audio_bytes)
+        segments, _ = model.transcribe(
+            wav_buf, language="en", beam_size=1, vad_filter=True,
+        )
+        parts = [seg.text.strip() for seg in segments if seg.text.strip()]
+        text = " ".join(parts)
+    except RuntimeError as exc:
+        return build_response(503, {"error": str(exc)})
+    except Exception as exc:
+        print(f"[transcribe] Error: {exc}")
+        return build_response(500, {"error": "Transcription failed"})
+
+    return build_response(200, {"text": text})
+
+
+# ---------------------------------------------------------------------------
 # Route table
 # ---------------------------------------------------------------------------
 ROUTES = [
@@ -444,6 +512,7 @@ ROUTES = [
     ("GET", r"^/api/screenshots/pending$", handle_pending_screenshots),
     ("POST", r"^/api/screenshots/upload$", handle_screenshot_upload),
     ("GET", r"^/api/screenshots/(?P<request_id>[^/]+)$", handle_get_screenshot),
+    ("POST", r"^/api/subtitles/transcribe$", handle_transcribe),
 ]
 
 
